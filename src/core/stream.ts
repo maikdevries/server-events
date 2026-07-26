@@ -26,9 +26,11 @@ export class Stream {
 	}
 
 	close(options: { 'notify': boolean } = { 'notify': true }): void {
+		if (!this.#controller) return;
+
 		try {
 			if (options.notify) this.send({ 'data': 'server closed connection', 'type': 'close' });
-			this.#controller?.close();
+			this.#controller.close();
 		} catch (_: unknown) {}
 
 		this.#controller = null;
