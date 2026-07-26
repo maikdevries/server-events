@@ -3,6 +3,8 @@ interface Event {
 	'type': string;
 }
 
+const ENCODER = new TextEncoder();
+
 export class Stream {
 	#controller: ReadableStreamDefaultController<Uint8Array> | null = null;
 	#stream: ReadableStream<Uint8Array>;
@@ -45,6 +47,6 @@ export class Stream {
 		if (!this.connected) throw new Error();
 
 		const message = `event: ${event.type}\ndata: ${event.data}`;
-		this.#controller?.enqueue(new TextEncoder().encode(message + '\n\n'));
+		this.#controller?.enqueue(ENCODER.encode(message + '\n\n'));
 	}
 }
