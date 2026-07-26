@@ -1,3 +1,7 @@
+interface Event {
+	'data': unknown;
+}
+
 export class Stream {
 	#controller: ReadableStreamDefaultController<Uint8Array> | null = null;
 	#stream: ReadableStream<Uint8Array>;
@@ -17,10 +21,10 @@ export class Stream {
 		});
 	}
 
-	send(data: unknown): void {
+	send(event: Event): void {
 		if (!this.#controller) throw new Error();
 
-		const event = `data: ${data}`;
-		this.#controller.enqueue(new TextEncoder().encode(event + '\n\n'));
+		const message = `data: ${event.data}`;
+		this.#controller.enqueue(new TextEncoder().encode(message + '\n\n'));
 	}
 }
