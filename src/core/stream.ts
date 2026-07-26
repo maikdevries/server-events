@@ -3,17 +3,15 @@ interface Event {
 	'type': string;
 }
 
-const ENCODER = new TextEncoder();
-
 export class Stream {
-	#controller: ReadableStreamDefaultController<Uint8Array> | null = null;
+	#controller: ReadableStreamDefaultController<string> | null = null;
 	#stream: ReadableStream<Uint8Array>;
 
 	constructor() {
 		this.#stream = new ReadableStream({
 			'start': (controller) => this.#controller = controller,
 			'cancel': this.close.bind(this, { 'notify': false }),
-		});
+		}).pipeThrough(new TextEncoderStream());
 	}
 
 	get connected(): boolean {
@@ -47,6 +45,6 @@ export class Stream {
 		if (!this.connected) throw new Error();
 
 		const message = `event: ${event.type}\ndata: ${event.data}`;
-		this.#controller?.enqueue(ENCODER.encode(message + '\n\n'));
+		this.#controller?.enqueue(message + '\n\n');
 	}
 }
