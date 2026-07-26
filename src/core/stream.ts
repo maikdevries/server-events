@@ -10,6 +10,7 @@ export class Stream {
 	constructor() {
 		this.#stream = new ReadableStream({
 			'start': (controller) => this.#controller = controller,
+			'cancel': this.close,
 		});
 	}
 
@@ -22,6 +23,10 @@ export class Stream {
 				'Content-Type': 'text/event-stream',
 			},
 		});
+	}
+
+	close(): void {
+		this.#controller?.close();
 	}
 
 	send(event: Event): void {
