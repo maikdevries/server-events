@@ -26,7 +26,11 @@ export class Stream {
 	}
 
 	close(): void {
-		this.#controller?.close();
+		try {
+			this.#controller?.close();
+		} finally {
+			this.#controller = null;
+		}
 	}
 
 	send(event: Event): void {
