@@ -25,6 +25,7 @@ export class Stream {
 			'headers': {
 				'Cache-Control': 'no-cache',
 				'Content-Type': 'text/event-stream',
+				'X-Accel-Buffering': 'no',
 			},
 		});
 	}
