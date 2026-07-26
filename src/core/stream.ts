@@ -1,5 +1,6 @@
 interface Event {
 	'data': unknown;
+	'type': string;
 }
 
 export class Stream {
@@ -24,7 +25,7 @@ export class Stream {
 	send(event: Event): void {
 		if (!this.#controller) throw new Error();
 
-		const message = `data: ${event.data}`;
+		const message = `event: ${event.type}\ndata: ${event.data}`;
 		this.#controller.enqueue(new TextEncoder().encode(message + '\n\n'));
 	}
 }
