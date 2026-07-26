@@ -14,6 +14,10 @@ export class Stream {
 		});
 	}
 
+	get connected(): boolean {
+		return this.#controller !== null;
+	}
+
 	get response(): Response {
 		if (this.#stream.locked) throw new Error();
 
@@ -26,20 +30,20 @@ export class Stream {
 	}
 
 	close(options: { 'notify': boolean } = { 'notify': true }): void {
-		if (!this.#controller) return;
+		if (!this.connected) return;
 
 		try {
 			if (options.notify) this.send({ 'data': 'server closed connection', 'type': 'close' });
-			this.#controller.close();
+			this.#controller?.close();
 		} catch (_: unknown) {}
 
 		this.#controller = null;
 	}
 
 	send(event: Event): void {
-		if (!this.#controller) throw new Error();
+		if (!this.connected) throw new Error();
 
 		const message = `event: ${event.type}\ndata: ${event.data}`;
-		this.#controller.enqueue(new TextEncoder().encode(message + '\n\n'));
+		this.#controller?.enqueue(new TextEncoder().encode(message + '\n\n'));
 	}
 }
