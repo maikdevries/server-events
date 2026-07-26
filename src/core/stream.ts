@@ -10,7 +10,7 @@ export class Stream {
 	constructor() {
 		this.#stream = new ReadableStream({
 			'start': (controller) => this.#controller = controller,
-			'cancel': this.close,
+			'cancel': this.close.bind(this),
 		});
 	}
 
