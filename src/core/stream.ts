@@ -1,7 +1,11 @@
 interface Event {
-	'data': unknown;
+	'data': JSON;
 	'type': string;
 }
+
+type JSON = string | number | boolean | null | JSON[] | {
+	[key: string]: JSON;
+};
 
 export class Stream {
 	#controller: ReadableStreamDefaultController<string> | null = null;
@@ -44,7 +48,10 @@ export class Stream {
 	send(event: Event): void {
 		if (!this.connected) throw new Error();
 
-		const message = `event: ${event.type}\ndata: ${event.data}`;
+		const message = `event: ${event.type}\ndata: ${
+			typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
+		}`;
+
 		this.#controller?.enqueue(message + '\n\n');
 	}
 }
