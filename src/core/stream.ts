@@ -14,6 +14,8 @@ export class Stream {
 	}
 
 	get response(): Response {
+		if (this.#stream.locked) throw new Error();
+
 		return new Response(this.#stream, {
 			'headers': {
 				'Cache-Control': 'no-cache',
