@@ -10,7 +10,7 @@ export class Stream {
 	constructor() {
 		this.#stream = new ReadableStream({
 			'start': (controller) => this.#controller = controller,
-			'cancel': this.close.bind(this),
+			'cancel': this.close.bind(this, { 'notify': false }),
 		});
 	}
 
@@ -25,7 +25,7 @@ export class Stream {
 		});
 	}
 
-	close(options: { 'notify': boolean }): void {
+	close(options: { 'notify': boolean } = { 'notify': true }): void {
 		try {
 			if (options.notify) this.send({ 'data': 'server closed connection', 'type': 'close' });
 			this.#controller?.close();
