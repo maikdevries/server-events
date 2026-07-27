@@ -3,9 +3,7 @@ interface Event {
 	'type': string;
 }
 
-type JSON = string | number | boolean | null | JSON[] | {
-	[key: string]: JSON;
-};
+type JSON = string | number | boolean | null | JSON[] | { [key: string]: JSON } | { toJSON(): JSON };
 
 export class Stream {
 	#controller: ReadableStreamDefaultController<string> | null = null;
