@@ -7,12 +7,15 @@ type JSON = string | number | boolean | null | JSON[] | { [key: string]: JSON } 
 
 export class Stream {
 	#controller: ReadableStreamDefaultController<string> | null = null;
+	#heartbeat: number | null = null;
 	#stream: ReadableStream<Uint8Array>;
 
 	constructor() {
 		this.#stream = new ReadableStream({
 			'start': (controller) => {
 				this.#controller = controller;
+				this.#heartbeat = setInterval(() => this.#write(':'), 30000);
+
 				this.#write(':');
 			},
 			'cancel': this.close.bind(this, { 'notify': false }),
@@ -43,7 +46,8 @@ export class Stream {
 			this.#controller?.close();
 		} catch (_: unknown) {}
 
-		this.#controller = null;
+		if (this.#heartbeat) clearInterval(this.#heartbeat);
+		this.#controller = this.#heartbeat = null;
 	}
 
 	send(event: Event): void {
