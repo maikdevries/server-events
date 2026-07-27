@@ -1,4 +1,4 @@
-interface Event {
+export interface Event {
 	'data': JSON;
 	'type': string;
 }

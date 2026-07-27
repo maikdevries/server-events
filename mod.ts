@@ -2,4 +2,4 @@
  * @module
  */
 
-export { Stream } from '@self/core';
+export { type Event, Stream } from '@self/core';
