@@ -44,12 +44,15 @@ export class Stream {
 	}
 
 	send(event: Event): void {
-		if (!this.connected) throw new Error();
-
 		const message = `event: ${event.type}\ndata: ${
 			typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
 		}`;
 
+		return this.#write(message);
+	}
+
+	#write(message: string): void {
+		if (!this.connected) throw new Error();
 		this.#controller?.enqueue(message + '\n\n');
 	}
 }
