@@ -11,7 +11,10 @@ export class Stream {
 
 	constructor() {
 		this.#stream = new ReadableStream({
-			'start': (controller) => this.#controller = controller,
+			'start': (controller) => {
+				this.#controller = controller;
+				this.#write(':');
+			},
 			'cancel': this.close.bind(this, { 'notify': false }),
 		}).pipeThrough(new TextEncoderStream());
 	}
